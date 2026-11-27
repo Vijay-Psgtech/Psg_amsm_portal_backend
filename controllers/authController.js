@@ -29,6 +29,13 @@ const REQUIRED_FIELDS = {
   coordinator: ['name', 'staffId', 'designation', 'dept', 'email', 'programRole'],
 };
 const hasRole = (role) => Object.hasOwn(PROFILE_FIELDS, role);
+const toPublicUser = (user) => ({
+  id: user.id,
+  role: user.role,
+  name: user.name,
+  email: user.email,
+  profile: user.profile,
+});
 
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -128,7 +135,7 @@ export async function login(req, res, next) {
     res.cookie('mentorshipSession', token, cookieOptions);
 
     return res.json({
-      user: { id: user.id, role: user.role, name: user.name, email: user.email },
+      user: toPublicUser(user),
     });
   } catch (error) {
     return next(error);
@@ -144,7 +151,7 @@ export async function currentUser(req, res, next) {
     }
 
     return res.json({
-      user: { id: user.id, role: user.role, name: user.name, email: user.email },
+      user: toPublicUser(user),
     });
   } catch (error) {
     return next(error);
